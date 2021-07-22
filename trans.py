@@ -54,10 +54,11 @@ class TransClient():
         self.time_stamp = None
 
     def publish(self, data):
-        time_stamp = json.loads(data)["meta"]["t"]
-        if self.time_stamp != time_stamp:
-            self.client.publish(self.config.get("target_topic"), data)
-        self.time_stamp = time_stamp
+        # time_stamp = json.loads(data)["meta"]["t"]
+        # if self.time_stamp != time_stamp:
+        #     self.client.publish(self.config.get("target_topic"), data)
+        # self.time_stamp = time_stamp
+        self.client.publish(self.config.get("target_topic"), data)
 
 
 class ListenClient():
