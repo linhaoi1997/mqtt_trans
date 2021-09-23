@@ -8,4 +8,4 @@ COPY . /test
 WORKDIR /test
 ENTRYPOINT ["python"]
 
-CMD ["SaveToDB/lxs.py"]
+CMD ["save_to_db/lxs.py"]
