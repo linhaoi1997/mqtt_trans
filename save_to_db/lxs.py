@@ -4,7 +4,7 @@ import time
 from threading import Thread
 
 import paho.mqtt.client as mqtt
-from SaveToDB.models import LxsData
+from save_to_db.models import LxsData
 import asyncio
 import yaml
 
