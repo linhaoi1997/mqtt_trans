@@ -30,16 +30,34 @@ def on_message(client, userdata, msg):
         asyncio.run_coroutine_threadsafe(save(msg.topic, i, datetime.datetime.fromtimestamp(i["ts"] / 1000)), loop)
 
 
-def subscribe():
+def on_disconnect(client, userdata, rc):
+    if rc != 0:
+        print("Unexpected disconnection.")
     with open("./info.yaml") as f:
         data = yaml.safe_load(f)["mqtt"]
-    client = mqtt.Client()
-    client.username_pw_set(data["user"], data["password"])
-    client.on_connect = on_connect
-    client.on_message = on_message
-    client.connect(data["host"], data["port"])
-    client.subscribe(data["topic"], qos=0)
-    client.loop_forever()
+    while True:
+        print("尝试重连")
+        try:
+            client.connect(data["host"], data["port"], keepalive=10)
+            client.subscribe(data["topic"], qos=0)
+            break
+        except Exception as e:
+            print(e)
+        time.sleep(5)
+
+
+def subscribe(client_):
+    with open("./info.yaml") as f:
+        data = yaml.safe_load(f)["mqtt"]
+    # client = mqtt.Client()
+    client_.username_pw_set(data["user"], data["password"])
+    client_.on_connect = on_connect
+    client_.on_message = on_message
+    client_.on_disconnect = on_disconnect
+
+    client_.connect(data["host"], data["port"], keepalive=10)
+    client_.subscribe(data["topic"], qos=0)
+    client_.loop_forever()
     return client
 
 
@@ -53,4 +71,5 @@ if __name__ == '__main__':
     loop = asyncio.new_event_loop()
     t = Thread(target=start_loop, args=(loop,))
     t.start()
-    client = subscribe()
+    client = mqtt.Client()
+    subscribe(client)

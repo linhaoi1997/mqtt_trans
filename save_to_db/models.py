@@ -15,6 +15,7 @@ class BaseModel(Model):
 
 
 class LxsData(BaseModel):
+    id = IntegerField(primary_key=True)
     receive_timestamp = DateTimeField(constraints=[SQL("DEFAULT now()")])
     device_id = CharField(index=True)
     topic = CharField(index=True)
